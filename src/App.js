@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+/** @jsxImportSource @emotion/react */
+import { jsx, css } from "@emotion/react";
+import DataTable from "./components/DataTable";
+import Filters from "./components/Filters";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      css={css`
+        display: flex;
+        aligni-tems: center;
+        justify-content: center;
+        min-height: 100vh;
+      `}
+    >
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          grid-template-rows: max-content;
+          grid-column-gap: 60px;
+          width: 100%;
+          max-width: 1220px;
+          margin: 3rem auto;
+          @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+          }
+        `}
+      >
+        <Filters />
+        <DataTable />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
