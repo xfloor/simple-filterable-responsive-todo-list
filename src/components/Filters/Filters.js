@@ -2,6 +2,7 @@
 import { css } from "@emotion/react";
 import theme from "../../theme";
 import {
+  Button,
   FormControl,
   FormControlLabel,
   MenuItem,
@@ -13,6 +14,12 @@ import {
 import { Box } from "@mui/system";
 
 const Filters = ({ filters, setFilters, filterableIds }) => {
+  const resetFilters = () =>
+    setFilters({
+      title: "",
+      completed: false,
+      userId: "",
+    });
   return (
     <Box
       sx={{
@@ -31,12 +38,18 @@ const Filters = ({ filters, setFilters, filterableIds }) => {
           label="Search"
           variant="outlined"
           value={filters.title}
+          css={css`
+            background: green;
+          `}
           onChange={(e) =>
             setFilters({
               ...filters,
               title: e.target.value,
             })
           }
+          inputProps={{
+            sx: { backgroundColor: theme.palette.common.white },
+          }}
         />
       </Box>
       <Box sx={{ py: 3 }}>
@@ -78,6 +91,9 @@ const Filters = ({ filters, setFilters, filterableIds }) => {
         <FormControl fullWidth>
           <Select
             value={filters.userId}
+            inputProps={{
+              sx: { backgroundColor: theme.palette.common.white },
+            }}
             onChange={(e) =>
               setFilters({
                 ...filters,
@@ -96,6 +112,18 @@ const Filters = ({ filters, setFilters, filterableIds }) => {
           </Select>
         </FormControl>
       </Box>
+      <Button
+        sx={{
+          margin: "0 auto",
+          display: "block",
+          textDecoration: "underline",
+          textTransform: "capitalize",
+        }}
+        variant="text"
+        onClick={() => resetFilters()}
+      >
+        Reset Filters
+      </Button>
     </Box>
   );
 };

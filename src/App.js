@@ -62,7 +62,7 @@ const App = () => {
           setFilters={setFilters}
           filterableIds={ids}
         />
-        <DataTable data={filteredData} />
+        <DataTable data={filteredData} itemsPerPage={5} />
       </div>
     </div>
   );
