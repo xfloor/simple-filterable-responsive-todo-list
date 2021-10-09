@@ -38,7 +38,7 @@ const App = () => {
     <div
       css={css`
         display: flex;
-        aligni-tems: center;
+        align-items: center;
         justify-content: center;
         min-height: 100vh;
       `}
@@ -51,7 +51,7 @@ const App = () => {
           grid-column-gap: 60px;
           width: 100%;
           max-width: 1220px;
-          margin: 3rem auto;
+          margin: 0 auto;
           @media (max-width: 900px) {
             grid-template-columns: 1fr;
           }
