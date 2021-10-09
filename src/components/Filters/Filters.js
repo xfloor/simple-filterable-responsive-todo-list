@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx, css } from "@emotion/react";
+import { css } from "@emotion/react";
 import theme from "../../theme";
 import {
   FormControl,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 
-const Filters = () => {
+const Filters = ({ filters, setFilters, filterableIds }) => {
   return (
     <Box
       sx={{
@@ -25,7 +25,19 @@ const Filters = () => {
         Filters
       </Typography>
       <Box sx={{ py: 3 }}>
-        <TextField name="search" fullWidth label="Search" variant="outlined" />
+        <TextField
+          name="title"
+          fullWidth
+          label="Search"
+          variant="outlined"
+          value={filters.title}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              title: e.target.value,
+            })
+          }
+        />
       </Box>
       <Box sx={{ py: 3 }}>
         <Typography
@@ -38,7 +50,18 @@ const Filters = () => {
         </Typography>
         <FormControlLabel
           value="start"
-          control={<Switch color="primary" />}
+          control={
+            <Switch
+              value={filters.completed}
+              onChange={(e, prev) =>
+                setFilters({
+                  ...filters,
+                  completed: prev ? true : false,
+                })
+              }
+              color="primary"
+            />
+          }
           label="NO"
           labelPlacement="start"
         />
@@ -53,8 +76,23 @@ const Filters = () => {
           Select user id
         </Typography>
         <FormControl fullWidth>
-          <Select value={null}>
-            <MenuItem value={1}>Test</MenuItem>
+          <Select
+            value={filters.userId}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                userId: e.target.value,
+              })
+            }
+          >
+            <MenuItem value="" key="blank-choice">
+              All
+            </MenuItem>
+            {filterableIds.map((e, k) => (
+              <MenuItem value={e} key={k}>
+                {e}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>

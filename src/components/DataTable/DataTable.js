@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useState } from "react";
-import { jsx, css } from "@emotion/react";
+import React from "react";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import theme from "../../theme";
@@ -23,14 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DataTable = () => {
-  const [data, setData] = useState(null);
-  useEffect(async () => {
-    const api = await fetch("https://jsonplaceholder.typicode.com/todos");
-    const res = await api.json();
-    setData(res);
-  }, []);
-
+const DataTable = ({ data }) => {
   const classes = useStyles();
   return (
     <Box
@@ -48,9 +40,9 @@ const DataTable = () => {
         </Box>
 
         {data &&
-          data.map((e) => {
+          data.map((e, k) => {
             return (
-              <>
+              <React.Fragment key={k}>
                 <Box className={classes.tableBodyRow}>
                   <Typography variant="body1" align="center">
                     {e.userId}
@@ -64,7 +56,7 @@ const DataTable = () => {
                     {e.completed ? "true" : "false"}
                   </Typography>
                 </Box>
-              </>
+              </React.Fragment>
             );
           })}
       </Box>
