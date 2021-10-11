@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { useState, useLayoutEffect } from "react";
 import { css } from "@emotion/react";
 import theme from "../../theme";
 import { makeStyles } from "@mui/styles";
@@ -9,6 +10,7 @@ import {
   MenuItem,
   Select,
   SvgIcon,
+  Slide,
   Switch,
   TextField,
   Typography,
@@ -44,12 +46,28 @@ const useStyles = makeStyles((theme) => ({
 
 const Filters = ({ filters, setFilters, filterableIds }) => {
   const classes = useStyles();
+  const [show, setShow] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const resetFilters = () =>
     setFilters({
       title: "",
       completed: false,
       userId: "",
     });
+  useLayoutEffect(() => {
+    function checkMobile() {
+      if (window.innerWidth < 900) {
+        setShow(false);
+        setIsMobile(true);
+      } else {
+        setShow(true);
+        setIsMobile(false);
+      }
+    }
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <Box
@@ -59,111 +77,127 @@ const Filters = ({ filters, setFilters, filterableIds }) => {
         alignSelf: "start",
       }}
     >
-      <Typography variant="h3" align="center">
-        Filters
-      </Typography>
-      <Box
-        sx={{ marginY: 3, backgroundColor: theme.palette.third.main }}
-        display="flex"
-        alignItems="center"
-      >
-        <IconFilter
-          sx={{ color: theme.palette.common.white, margin: "0 15px" }}
-        />
-        <TextField
-          name="title"
+      {isMobile ? (
+        <Button
+          onClick={() => setShow(show ? false : true)}
+          size="large"
+          variant="contained"
           fullWidth
-          label="Search"
-          variant="outlined"
-          value={filters.title}
-          onChange={(e) =>
-            setFilters({
-              ...filters,
-              title: e.target.value,
-            })
-          }
-          inputProps={{
-            sx: {
-              backgroundColor: theme.palette.common.white,
-              borderColor: theme.palette.third.main,
-            },
-          }}
-          className={classes.searchField}
-        />
-      </Box>
-      <Box sx={{ py: 3 }}>
-        <Typography
-          variant="h4"
-          css={css`
-            margin-bottom: 18px;
-          `}
         >
-          Completed
+          Filters
+        </Button>
+      ) : (
+        <Typography variant="h3" align="center">
+          Filters
         </Typography>
-        <FormControlLabel
-          value="start"
-          control={
-            <Switch
-              value={filters.completed}
-              onChange={(e, prev) =>
+      )}
+      <Slide in={show} onmountOnExit>
+        <Box display={show ? "block" : "none"}>
+          <Box
+            sx={{ marginY: 3, backgroundColor: theme.palette.third.main }}
+            display="flex"
+            alignItems="center"
+          >
+            <IconFilter
+              sx={{ color: theme.palette.common.white, margin: "0 15px" }}
+            />
+            <TextField
+              name="title"
+              fullWidth
+              label="Search"
+              variant="outlined"
+              value={filters.title}
+              onChange={(e) =>
                 setFilters({
                   ...filters,
-                  completed: prev ? true : false,
+                  title: e.target.value,
                 })
               }
-              color="primary"
+              inputProps={{
+                sx: {
+                  backgroundColor: theme.palette.common.white,
+                  borderColor: theme.palette.third.main,
+                },
+              }}
+              className={classes.searchField}
             />
-          }
-          label="NO"
-          labelPlacement="start"
-        />
-      </Box>
-      <Box sx={{ py: 3 }}>
-        <Typography
-          variant="h4"
-          css={css`
-            margin-bottom: 18px;
-          `}
-        >
-          Select user id
-        </Typography>
-        <FormControl fullWidth>
-          <Select
-            value={filters.userId}
-            inputProps={{
-              sx: { backgroundColor: theme.palette.common.white },
+          </Box>
+
+          <Box sx={{ py: 3 }}>
+            <Typography
+              variant="h4"
+              css={css`
+                margin-bottom: 18px;
+              `}
+            >
+              Completed
+            </Typography>
+            <FormControlLabel
+              value="start"
+              control={
+                <Switch
+                  value={filters.completed}
+                  onChange={(e, prev) =>
+                    setFilters({
+                      ...filters,
+                      completed: prev ? true : false,
+                    })
+                  }
+                  color="primary"
+                />
+              }
+              label="NO"
+              labelPlacement="start"
+            />
+          </Box>
+          <Box sx={{ py: 3 }}>
+            <Typography
+              variant="h4"
+              css={css`
+                margin-bottom: 18px;
+              `}
+            >
+              Select user id
+            </Typography>
+            <FormControl fullWidth>
+              <Select
+                value={filters.userId}
+                inputProps={{
+                  sx: { backgroundColor: theme.palette.common.white },
+                }}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    userId: e.target.value,
+                  })
+                }
+                className={classes.userIdField}
+              >
+                <MenuItem value="" key="blank-choice">
+                  All
+                </MenuItem>
+                {filterableIds.map((e, k) => (
+                  <MenuItem value={e} key={k}>
+                    {e}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <Button
+            sx={{
+              margin: "0 auto",
+              display: "block",
+              textDecoration: "underline",
+              textTransform: "capitalize",
             }}
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                userId: e.target.value,
-              })
-            }
-            className={classes.userIdField}
+            variant="text"
+            onClick={() => resetFilters()}
           >
-            <MenuItem value="" key="blank-choice">
-              All
-            </MenuItem>
-            {filterableIds.map((e, k) => (
-              <MenuItem value={e} key={k}>
-                {e}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      <Button
-        sx={{
-          margin: "0 auto",
-          display: "block",
-          textDecoration: "underline",
-          textTransform: "capitalize",
-        }}
-        variant="text"
-        onClick={() => resetFilters()}
-      >
-        Reset Filters
-      </Button>
+            Reset Filters
+          </Button>
+        </Box>
+      </Slide>
     </Box>
   );
 };

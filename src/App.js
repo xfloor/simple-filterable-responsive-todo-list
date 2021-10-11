@@ -35,6 +35,7 @@ const App = () => {
   }, []);
 
   return (
+    // Given it is required to do not use MUI for grid, we scaffold a basic one with CSS
     <div
       css={css`
         display: flex;
